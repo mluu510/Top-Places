@@ -95,6 +95,9 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="5U1-hq-sMV"/>
+                    <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="0RM-Ny-x6b">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </refreshControl>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="b5V-yt-Rbh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -240,6 +243,6 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="b5r-ev-EsV"/>
+        <segue reference="ZDW-nq-kel"/>
     </inferredMetricsTieBreakers>
 </document>

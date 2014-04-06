@@ -86,7 +86,7 @@
     
     // Configure the cell...
     NSDictionary *photo = [self.photos objectAtIndex:indexPath.row];
-    cell.textLabel.text = photo[@"title"];
+    cell.textLabel.text = [NSString stringWithFormat:@"%i. %@", indexPath.row + 1, photo[@"title"]];
     cell.detailTextLabel.text = photo[@"ownername"];
     
     return cell;

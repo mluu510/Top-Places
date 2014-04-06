@@ -12,40 +12,46 @@
 
 @interface TopPlacesTableViewController ()
 
-@property (nonatomic, strong) NSDictionary *topPlaces;
 @property (nonatomic, strong) NSDictionary *byCountries;
+@property (nonatomic, strong) NSArray *countries;
+@property (nonatomic, strong) UIActivityIndicatorView *spinner;
+@property (weak, nonatomic) IBOutlet UIRefreshControl *refreshControl;
 
 @end
 
 @implementation TopPlacesTableViewController
 
-- (id)initWithStyle:(UITableViewStyle)style
-{
-    self = [super initWithStyle:style];
-    if (self) {
-        // Custom initialization
-
-    }
-    return self;
+- (void)viewDidLoad {
+    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+    [refreshControl addTarget:self action:@selector(refresh)
+             forControlEvents:UIControlEventValueChanged];
+    self.refreshControl = refreshControl;
+    [self loadTopPlaces];
+    
 }
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    
-    NSURL *topPlacesURL = [FlickrFetcher URLforTopPlaces];
-    NSData *topPlacesData = [NSData dataWithContentsOfURL:topPlacesURL];
-    self.topPlaces = [NSJSONSerialization JSONObjectWithData:topPlacesData options:0 error:nil];
-//    NSLog(@"%@", self.topPlaces[@"places"][@"place"]);
-    
-    self.byCountries = [self placesByCountries:self.topPlaces[@"places"][@"place"]];
-    
-    
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+- (void)refresh {
+    [self loadTopPlaces];
+}
+
+
+- (void)loadTopPlaces {
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    dispatch_queue_t downloadQueue = dispatch_queue_create("Top place download", NULL);
+    dispatch_async(downloadQueue, ^{
+        NSURL *topPlacesURL = [FlickrFetcher URLforTopPlaces];
+        NSData *topPlacesData = [NSData dataWithContentsOfURL:topPlacesURL];
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+        
+        NSDictionary *topPlaces = [NSJSONSerialization JSONObjectWithData:topPlacesData options:0 error:nil];
+        
+        self.byCountries = [self placesByCountries:[topPlaces valueForKeyPath:FLICKR_RESULTS_PLACES]];
+        self.countries = [self.byCountries.allKeys sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+            [self.refreshControl endRefreshing];
+        });
+    });
 }
 
 - (NSDictionary *)placesByCountries:(NSArray *)places
@@ -63,7 +69,6 @@
             byCountries[country] = [@[] mutableCopy];
         }
     }
-//    NSLog(@"%@", byCountries);
     return  byCountries;
 }
 
@@ -77,17 +82,17 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return self.byCountries.allKeys.count;
+    return self.countries.count;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    return [self.byCountries.allKeys objectAtIndex:section];
+    return [self.countries objectAtIndex:section];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSString *country = [self.byCountries.allKeys objectAtIndex:section];
+    NSString *country = [self.countries objectAtIndex:section];
     NSArray *places = self.byCountries[country];
     
     return places.count;
@@ -98,7 +103,7 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Place Cell" forIndexPath:indexPath];
  
     // Configure the cell...
-    NSString *country = [self.byCountries.allKeys objectAtIndex:indexPath.section];
+    NSString *country = [self.countries objectAtIndex:indexPath.section];
     NSDictionary *place = [self.byCountries[country] objectAtIndex:indexPath.row];
     NSArray *contents = [place[@"_content"] componentsSeparatedByString:@", "];
     NSString *title = [contents firstObject];
@@ -112,48 +117,8 @@
     return cell;
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-
 #pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     // Get the new view controller using [segue destinationViewController].
@@ -161,7 +126,7 @@
     
     NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
     
-    NSString *country = [self.byCountries.allKeys objectAtIndex:indexPath.section];
+    NSString *country = [self.countries objectAtIndex:indexPath.section];
     NSArray *places = self.byCountries[country];
     NSDictionary *selectedPlace = [places objectAtIndex:indexPath.row];
 //    NSLog(@"%@", selectedPlace);
