@@ -13,6 +13,8 @@
 
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *spinner;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
+@property (nonatomic) BOOL isFullScreen;
+@property (nonatomic) CGRect prevFrame;
 
 @end
 
@@ -23,7 +25,66 @@
     [super viewDidLoad];
     self.title = self.photo[@"title"];
     self.scrollView.delegate = self;
+    self.isFullScreen = NO;
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goFullScreen:)];
+    [self.scrollView addGestureRecognizer:tap];
     [self downloadImage];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self goFullScreen:nil];
+}
+
+- (void)goFullScreen:(UITapGestureRecognizer *)tap {
+    UITabBar *tabBar = self.tabBarController.tabBar;
+    if (!self.isFullScreen) {
+        self.isFullScreen = YES;
+        [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
+        [self.navigationController setNavigationBarHidden:YES animated:YES];
+        [self hideTabBar];
+    } else {
+        self.isFullScreen = NO;
+        [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
+        [self.navigationController setNavigationBarHidden:NO animated:YES];
+        [self showTabBar];
+    }
+}
+
+- (void)hideTabBar {
+    UITabBar *tabBar = self.tabBarController.tabBar;
+    UIView *parent = tabBar.superview; // UILayoutContainerView
+    UIView *content = [parent.subviews objectAtIndex:0];  // UITransitionView
+    UIView *window = parent.superview;
+    
+    [UIView animateWithDuration:0.25
+                     animations:^{
+                         CGRect tabFrame = tabBar.frame;
+                         tabFrame.origin.y = CGRectGetMaxY(window.bounds);
+                         tabBar.frame = tabFrame;
+                         content.frame = window.bounds;
+                     }];
+    
+    // 1
+}
+
+- (void)showTabBar {
+    UITabBar *tabBar = self.tabBarController.tabBar;
+    UIView *parent = tabBar.superview; // UILayoutContainerView
+    UIView *content = [parent.subviews objectAtIndex:0];  // UITransitionView
+    UIView *window = parent.superview;
+    
+    [UIView animateWithDuration:0.25
+                     animations:^{
+                         CGRect tabFrame = tabBar.frame;
+                         tabFrame.origin.y = CGRectGetMaxY(window.bounds) - CGRectGetHeight(tabBar.frame);
+                         tabBar.frame = tabFrame;
+                         
+                         CGRect contentFrame = content.frame;
+                         contentFrame.size.height -= tabFrame.size.height;
+                     }];
+    
+    // 2
 }
 
 - (void)downloadImage {
