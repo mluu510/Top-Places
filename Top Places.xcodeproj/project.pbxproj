@@ -26,6 +26,7 @@
 		27589DC718EBD8C900BB768B /* SelectedPlaceTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27589DC618EBD8C900BB768B /* SelectedPlaceTableViewController.m */; };
 		27589DCA18EBE1B000BB768B /* PhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27589DC918EBE1B000BB768B /* PhotoViewController.m */; };
 		27589DCD18EBE66A00BB768B /* HistoryTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27589DCC18EBE66A00BB768B /* HistoryTableViewController.m */; };
+		277A222718F0E156001C3461 /* CoreDataTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 277A222618F0E156001C3461 /* CoreDataTableViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +70,8 @@
 		27589DC918EBE1B000BB768B /* PhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoViewController.m; sourceTree = "<group>"; };
 		27589DCB18EBE66A00BB768B /* HistoryTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HistoryTableViewController.h; sourceTree = "<group>"; };
 		27589DCC18EBE66A00BB768B /* HistoryTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HistoryTableViewController.m; sourceTree = "<group>"; };
+		277A222518F0E156001C3461 /* CoreDataTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreDataTableViewController.h; sourceTree = "<group>"; };
+		277A222618F0E156001C3461 /* CoreDataTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreDataTableViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +144,7 @@
 				27589DC318EBCAC200BB768B /* TopPlacesTableViewController.m */,
 				27589D9D18EBC93B00BB768B /* ViewController.h */,
 				27589D9E18EBC93B00BB768B /* ViewController.m */,
+				277A222418F0E156001C3461 /* CoreDataTableViewController */,
 				27589DA018EBC93B00BB768B /* Images.xcassets */,
 				27589DBD18EBC9AD00BB768B /* Flickr Fetcher */,
 				27589D8F18EBC93B00BB768B /* Supporting Files */,
@@ -185,6 +189,15 @@
 				27589DC018EBC9AD00BB768B /* FlickrFetcher.m */,
 			);
 			path = "Flickr Fetcher";
+			sourceTree = "<group>";
+		};
+		277A222418F0E156001C3461 /* CoreDataTableViewController */ = {
+			isa = PBXGroup;
+			children = (
+				277A222518F0E156001C3461 /* CoreDataTableViewController.h */,
+				277A222618F0E156001C3461 /* CoreDataTableViewController.m */,
+			);
+			path = CoreDataTableViewController;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -286,6 +299,7 @@
 			files = (
 				27589DCD18EBE66A00BB768B /* HistoryTableViewController.m in Sources */,
 				27589DC718EBD8C900BB768B /* SelectedPlaceTableViewController.m in Sources */,
+				277A222718F0E156001C3461 /* CoreDataTableViewController.m in Sources */,
 				27589DC418EBCAC200BB768B /* TopPlacesTableViewController.m in Sources */,
 				27589D9F18EBC93B00BB768B /* ViewController.m in Sources */,
 				27589D9918EBC93B00BB768B /* AppDelegate.m in Sources */,
@@ -496,6 +510,7 @@
 				27589DB918EBC93B00BB768B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		27589DBA18EBC93B00BB768B /* Build configuration list for PBXNativeTarget "Top PlacesTests" */ = {
 			isa = XCConfigurationList;
@@ -504,6 +519,7 @@
 				27589DBC18EBC93B00BB768B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

@@ -115,16 +115,29 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FCc-L8-7XS">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                            </imageView>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="Q4A-lo-IxK">
+                                <rect key="frame" x="141" y="222" width="37" height="37"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </activityIndicatorView>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rxh-Nc-dfQ">
+                                <rect key="frame" x="-20" y="-20" width="360" height="520"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </scrollView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Q4A-lo-IxK" firstAttribute="leading" secondItem="oXs-DT-l8f" secondAttribute="leading" constant="141" id="446-hQ-2Qx"/>
+                            <constraint firstItem="Rxh-Nc-dfQ" firstAttribute="centerX" secondItem="oXs-DT-l8f" secondAttribute="centerX" id="Qle-cw-Rxm"/>
+                            <constraint firstItem="Q4A-lo-IxK" firstAttribute="centerY" secondItem="Rxh-Nc-dfQ" secondAttribute="centerY" id="c3K-zQ-ogk"/>
+                            <constraint firstItem="Rxh-Nc-dfQ" firstAttribute="leading" secondItem="oXs-DT-l8f" secondAttribute="leading" constant="-20" id="ffl-YK-7BA"/>
+                            <constraint firstItem="Rxh-Nc-dfQ" firstAttribute="top" secondItem="oXs-DT-l8f" secondAttribute="top" constant="-20" id="jak-9O-wrm"/>
+                            <constraint firstItem="Q4A-lo-IxK" firstAttribute="centerY" secondItem="oXs-DT-l8f" secondAttribute="centerY" id="mwu-3c-IUP"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="uvo-8S-ViI"/>
                     <connections>
-                        <outlet property="photoImageView" destination="FCc-L8-7XS" id="cVU-7x-9Cm"/>
+                        <outlet property="scrollView" destination="Rxh-Nc-dfQ" id="Si6-DF-sH4"/>
+                        <outlet property="spinner" destination="Q4A-lo-IxK" id="I4X-tv-lXm"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7Vv-sx-JCP" userLabel="First Responder" sceneMemberID="firstResponder"/>
