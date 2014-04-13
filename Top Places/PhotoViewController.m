@@ -42,49 +42,42 @@
         self.isFullScreen = YES;
         [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
         [self.navigationController setNavigationBarHidden:YES animated:YES];
-        [self hideTabBar];
+        [self hideTabBar:tabBar];
     } else {
         self.isFullScreen = NO;
         [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
         [self.navigationController setNavigationBarHidden:NO animated:YES];
-        [self showTabBar];
+        [self showTabBar:tabBar];
     }
 }
 
-- (void)hideTabBar {
-    UITabBar *tabBar = self.tabBarController.tabBar;
-    UIView *parent = tabBar.superview; // UILayoutContainerView
-    UIView *content = [parent.subviews objectAtIndex:0];  // UITransitionView
-    UIView *window = parent.superview;
-    
-    [UIView animateWithDuration:0.25
-                     animations:^{
-                         CGRect tabFrame = tabBar.frame;
-                         tabFrame.origin.y = CGRectGetMaxY(window.bounds);
-                         tabBar.frame = tabFrame;
-                         content.frame = window.bounds;
-                     }];
-    
-    // 1
+- (void) hideTabBar:(UITabBar *)tabBar
+{
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    float fHeight = screenRect.size.height;
+    if(  UIDeviceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation) ) {
+        fHeight = screenRect.size.width;
+    }
+    [UIView animateWithDuration:0.25 animations:^{
+        tabBar.frame = CGRectMake(tabBar.frame.origin.x, fHeight, tabBar.frame.size.width, tabBar.frame.size.height);
+    }completion:^(BOOL finished) {
+        tabBar.hidden = YES;
+    }];
 }
 
-- (void)showTabBar {
-    UITabBar *tabBar = self.tabBarController.tabBar;
-    UIView *parent = tabBar.superview; // UILayoutContainerView
-    UIView *content = [parent.subviews objectAtIndex:0];  // UITransitionView
-    UIView *window = parent.superview;
-    
-    [UIView animateWithDuration:0.25
-                     animations:^{
-                         CGRect tabFrame = tabBar.frame;
-                         tabFrame.origin.y = CGRectGetMaxY(window.bounds) - CGRectGetHeight(tabBar.frame);
-                         tabBar.frame = tabFrame;
-                         
-                         CGRect contentFrame = content.frame;
-                         contentFrame.size.height -= tabFrame.size.height;
-                     }];
-    
-    // 2
+
+
+- (void) showTabBar:(UITabBar *)tabBar
+{
+    tabBar.hidden = NO;
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    float fHeight = screenRect.size.height - tabBar.frame.size.height;
+    if(  UIDeviceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation) ) {
+        fHeight = screenRect.size.width - tabBar.frame.size.height;
+    }
+    [UIView animateWithDuration:0.25 animations:^{
+        tabBar.frame = CGRectMake(tabBar.frame.origin.x, fHeight, tabBar.frame.size.width, tabBar.frame.size.height);
+    }];
 }
 
 - (void)downloadImage {
@@ -143,6 +136,11 @@
     
     subView.center = CGPointMake(scrollView.contentSize.width * 0.5 + offsetX,
                                  scrollView.contentSize.height * 0.5 + offsetY);
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    [self centerScrollViewContent:self.scrollView];
+    NSLog(@"Recentering...");
 }
 
 @end
